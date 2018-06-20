@@ -9,8 +9,8 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# Project Title  
-## Project subtitle
+# Healthcare Data Comparison   
+## Comparing multiple healthcare plans
 
 ![jdecross - 2018-06-20](./ad-logo-long.png)
 
