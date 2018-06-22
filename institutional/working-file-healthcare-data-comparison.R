@@ -53,4 +53,4 @@ id.table2 <- table(a$National.Provider.Indentification)
 remove_individual_npi <- subset(a, National.Provider.Indentification %in% names(id.table2[id.table2 > 1]))
 
 # Export to a Excel file
-write.xlsx(remove_individual_npi, "/apps/rspro/projects/healthcare-data-comparison/institutional/remove_individual_npi.xlsx")
+write.csv(remove_individual_npi, "/apps/rspro/projects/healthcare-data-comparison/institutional/remove_individual_npi.csv")
