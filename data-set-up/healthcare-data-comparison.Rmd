@@ -10,18 +10,87 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 # Healthcare Data Comparison   
-## Comparing multiple healthcare plans
+## Comparing Multiple Healthcare Plans
 
 ![jdecross - 2018-06-20](./ad-logo-long.png)
 
 
 ***
+### Original Column Names 
 
+```{r message = FALSE}
+# Load package
+library(dplyr)
+library(xlsx)
+# Set the working directory
+setwd("/apps/rspro/projects/healthcare-data-comparison/institutional")
+
+# Hard set the select function
+select <- dplyr::select
+
+# Read in the institutional data set
+work_book1 <- read.csv("institutional_data_ehp_healthnow_mvp.csv")
+
+names(work_book1)
+```
+###  NPI and Address 
+#### As you can see compared to the column names in work_book1; In work_book2 I selected the  appropriate columns and then ordered them by NPI and Address.
 ```{r}
+work_book2 <-
+  select(work_book1,
+         National.Provider.Indentification,
+         Plan.Name, Standardized.Add.1,
+         Standardized.City,
+         Standardized.State,
+         Standardized.County.Name,
+         Standardized.ZIP, License.Number,
+         Medicaid.Provider.Identification.No,
+         Provider.Primary.Specialty,
+         Phone.Number) %>%
+  arrange(National.Provider.Indentification,
+          Standardized.Add.1,
+          Standardized.City,
+          Standardized.State,
+          Standardized.County.Name,
+          Standardized.ZIP)
+# Recheck the column namesWill
+head(work_book2)
+```
+### Subsetting NPI
+#### I created a table and used it to subset NPI greater than 1. This removes any individual NPI with nothing to compare it to. Then I assigned it to a new variable called work_book2_new.
+```{r}
+id.table <- table(work_book2$National.Provider.Indentification)
+work_book2_new <- subset(work_book2, National.Provider.Indentification %in% names(id.table[id.table > 1]))
+# Example of removing individual NPI
+print(work_book2[33:36,]) 
+print(work_book2_new[33:36,]) 
+
 
 ```
+### Unique
+#### I then applied the unique function. This removed any exact duplicate rows and left the original.  
 
 
+```{r}
+# Use unique function, this function will remove duplicates but keep the original
+a <- unique(work_book2_new)
+# Showing the difference between the two data sets
+print(work_book2_new[47:52,])
+
+print(a[16:20,])
+
+```
+### Removing Leftover NPI
+#### 
+```{r}
+# This is to clean up and remove any individual NPI
+# If their were two identical NPI rows than the unique function would remove one
+# Without another health plan to compare it to, the NPI has no value and should be removed
+id.table2 <- table(a$National.Provider.Indentification)
+remove_individual_npi <- subset(a, National.Provider.Indentification %in% names(id.table2[id.table2 > 1]))
+
+
+```
 
 ***
 

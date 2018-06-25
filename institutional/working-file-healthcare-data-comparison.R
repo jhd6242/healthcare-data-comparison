@@ -48,7 +48,7 @@ a <- unique(work_book2_new)
 
 # This is to clean up and remove any individual NPI
 # If their were two identical NPI rows than the unique function would remove one
-# without another health plan to compare it to, the NPI has no value and should be removed
+# Without another health plan to compare it to, the NPI has no value and should be removed
 id.table2 <- table(a$National.Provider.Indentification)
 remove_individual_npi <- subset(a, National.Provider.Indentification %in% names(id.table2[id.table2 > 1]))
 
