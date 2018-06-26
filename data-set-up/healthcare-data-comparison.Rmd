@@ -18,7 +18,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ***
 ### Original Column Names 
 
-```{r message = FALSE}
+```{r message = FALSE, echo = FALSE }
 # Load package
 library(dplyr)
 library(xlsx)
@@ -31,8 +31,14 @@ select <- dplyr::select
 # Read in the institutional data set
 work_book1 <- read.csv("institutional_data_ehp_healthnow_mvp.csv")
 
+```
+```{r}
+nrow(work_book1)
+
 names(work_book1)
 ```
+
+
 ###  NPI and Address 
 #### As you can see compared to the column names in work_book1; In work_book2 I selected the  appropriate columns and then ordered them by NPI and Address.
 ```{r}
@@ -53,8 +59,8 @@ work_book2 <-
           Standardized.State,
           Standardized.County.Name,
           Standardized.ZIP)
-# Recheck the column namesWill
-head(work_book2)
+# Recheck the column names
+names(work_book2)
 ```
 ### Subsetting NPI
 #### I created a table and used it to subset NPI greater than 1. This removes any individual NPI with nothing to compare it to. Then I assigned it to a new variable called work_book2_new.
@@ -68,28 +74,33 @@ print(work_book2_new[33:36,])
 
 ```
 ### Unique
-#### I then applied the unique function. This removed any exact duplicate rows and left the original.  
+#### I then applied the unique function. This removed any exact duplicate rows and left the original. This removes row 51 but kept row 50.  
 
 
-```{r}
+```{r, echo = FALSE}
 # Use unique function, this function will remove duplicates but keep the original
 a <- unique(work_book2_new)
 # Showing the difference between the two data sets
-print(work_book2_new[47:52,])
+# 
+print(work_book2_new[47:50,])
 
-print(a[16:20,])
+print(a[16:18,])
 
 ```
 ### Removing Leftover NPI
-#### 
+#### I applied another subset function to remove any leftover NPI.
 ```{r}
 # This is to clean up and remove any individual NPI
 # If their were two identical NPI rows than the unique function would remove one
 # Without another health plan to compare it to, the NPI has no value and should be removed
 id.table2 <- table(a$National.Provider.Indentification)
 remove_individual_npi <- subset(a, National.Provider.Indentification %in% names(id.table2[id.table2 > 1]))
+# Checking that the number of rows has been reduced
+nrow(remove_individual_npi)
+# Example:  Row 50 has been removed because it is a individual NPI. I used the unique function before to remove one copy of two duplicate rows. This left me with a individual NPI which I removed when a subset function.
+print(a[16:18,])
 
-
+print(remove_individual_npi[16:18,])
 ```
 
 ***
